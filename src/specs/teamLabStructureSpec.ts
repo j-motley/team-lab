@@ -1,7 +1,7 @@
 import { TeamLabStructureSpec } from '../types/teamLabTypes';
 
 export const TEAM_LAB_STRUCTURE_SPEC: TeamLabStructureSpec = {
-  version: '2.0',
+  version: '3.0',
   paths: [
     // .github layer
     { path: '.github', type: 'directory', required: true },
@@ -88,6 +88,33 @@ export const TEAM_LAB_STRUCTURE_SPEC: TeamLabStructureSpec = {
       protected: true,
     },
     { path: '.github/skills', type: 'directory', required: true },
+    { path: '.github/skills/build-context', type: 'directory', required: true },
+    {
+      path: '.github/skills/build-context/SKILL.md',
+      type: 'file',
+      required: true,
+      ownership: 'seeded',
+      templateId: 'skill-build-context',
+      protected: true,
+    },
+    { path: '.github/skills/analyze-model', type: 'directory', required: true },
+    {
+      path: '.github/skills/analyze-model/SKILL.md',
+      type: 'file',
+      required: true,
+      ownership: 'seeded',
+      templateId: 'skill-analyze-model',
+      protected: true,
+    },
+    { path: '.github/skills/plan-model-update', type: 'directory', required: true },
+    {
+      path: '.github/skills/plan-model-update/SKILL.md',
+      type: 'file',
+      required: true,
+      ownership: 'seeded',
+      templateId: 'skill-plan-model-update',
+      protected: true,
+    },
 
     // ai_context layer
     { path: 'ai_context', type: 'directory', required: true },
@@ -120,10 +147,5 @@ export const TEAM_LAB_STRUCTURE_SPEC: TeamLabStructureSpec = {
       templateId: 'repo-baseline',
       protected: true,
     },
-    { path: 'ai_context/project_profiles', type: 'directory', required: true },
-    { path: 'ai_context/architecture', type: 'directory', required: true },
-    { path: 'ai_context/conventions', type: 'directory', required: true },
-    { path: 'ai_context/inventories', type: 'directory', required: true },
-    { path: 'ai_context/relationship_maps', type: 'directory', required: true },
   ],
 };

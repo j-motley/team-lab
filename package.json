@@ -47,6 +47,10 @@
       {
         "command": "teamLab.scaffoldAgentStructure",
         "title": "Team Lab: Scaffold Agent Structure"
+      },
+      {
+        "command": "teamLab.updateModel",
+        "title": "Team Lab: Update Model (Prototype)"
       }
     ]
   },

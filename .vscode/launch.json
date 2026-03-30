@@ -10,12 +10,21 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
+				"${input:testFolder}",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
 			"preLaunchTask": "${defaultBuildTask}"
+		}
+	],
+	"inputs": [
+		{
+			"id": "testFolder",
+			"type": "promptString",
+			"description": "Path to workspace folder to open for testing",
+			"default": "${env:HOME}/Development"
 		}
 	]
 }

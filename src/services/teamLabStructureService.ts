@@ -66,7 +66,7 @@ export class FileSystemTeamLabStructureService implements TeamLabStructureServic
 
     const isCompliant = missingRequiredPaths.length === 0 && baseline.isReady;
 
-    return {
+    const validationResult: TeamLabValidationResult = {
       workspaceRoot,
       specVersion: spec.version,
       isCompliant,
@@ -75,6 +75,15 @@ export class FileSystemTeamLabStructureService implements TeamLabStructureServic
       missingRequiredPaths,
       baseline,
     };
+
+    // Update manifest with current state (only if ai_context dir exists)
+    const aiContextExists = items.some(i => i.path === 'ai_context' && i.exists);
+    const manifestExists = items.some(i => i.path === 'ai_context/team_lab_manifest.json' && i.exists);
+    if (aiContextExists && manifestExists) {
+      await this.updateManifest(workspaceRoot, validationResult);
+    }
+
+    return validationResult;
   }
 
   async scaffold(
@@ -191,6 +200,90 @@ export class FileSystemTeamLabStructureService implements TeamLabStructureServic
         isReady: false,
         requiresUserAction: true,
       };
+    }
+  }
+
+  private async updateManifest(
+    workspaceRoot: string,
+    result: TeamLabValidationResult
+  ): Promise<void> {
+    const manifestPath = path.join(workspaceRoot, 'ai_context', 'team_lab_manifest.json');
+
+    // Categorize files by ownership
+    const generated: string[] = [];
+    const seeded: string[] = [];
+    const humanRequired: string[] = [];
+
+    for (const item of result.items) {
+      if (item.type === 'file' && item.ownership) {
+        switch (item.ownership) {
+          case 'generated':
+            generated.push(item.path);
+            break;
+          case 'seeded':
+            seeded.push(item.path);
+            break;
+          case 'human-required':
+            humanRequired.push(item.path);
+            break;
+        }
+      }
+    }
+
+    // Detect dbt projects
+    const detectedProjects: Array<{ name: string; path: string }> = [];
+    try {
+      const projectIndexPath = path.join(workspaceRoot, 'ai_context', 'project_index.json');
+      const raw = await fs.readFile(projectIndexPath, 'utf-8');
+      const parsed = JSON.parse(raw) as { projects?: Array<{ name: string; path: string }> };
+      if (parsed.projects) {
+        detectedProjects.push(...parsed.projects);
+      }
+    } catch {
+      // project index may not exist yet
+    }
+
+    const manifest = {
+      version: result.specVersion,
+      scaffolded_at: result.checkedAt,
+      last_validated_at: result.checkedAt,
+      detected_projects: detectedProjects,
+      structure: {
+        github: {
+          exists: result.items.some(i => i.path === '.github' && i.exists),
+          copilot_instructions: result.items.some(i => i.path === '.github/copilot-instructions.md' && i.exists),
+          instructions_dir: result.items.some(i => i.path === '.github/instructions' && i.exists),
+          agents_dir: result.items.some(i => i.path === '.github/agents' && i.exists),
+          skills_dir: result.items.some(i => i.path === '.github/skills' && i.exists),
+        },
+        ai_context: {
+          exists: result.items.some(i => i.path === 'ai_context' && i.exists),
+          project_index: result.items.some(i => i.path === 'ai_context/project_index.json' && i.exists),
+          workspace_summary: result.items.some(i => i.path === 'ai_context/workspace_summary.md' && i.exists),
+          team_lab_manifest: true,
+          repo_baseline: result.baseline.exists,
+        },
+      },
+      baseline: {
+        path: result.baseline.path,
+        exists: result.baseline.exists,
+        is_template: result.baseline.isTemplate,
+        is_ready: result.baseline.isReady,
+        requires_user_action: result.baseline.requiresUserAction,
+      },
+      files: {
+        generated,
+        seeded,
+        human_required: humanRequired,
+      },
+    };
+
+    try {
+      await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf-8');
+      this.logger.info('Updated team_lab_manifest.json');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.warn(`Could not update manifest: ${msg}`);
     }
   }
 

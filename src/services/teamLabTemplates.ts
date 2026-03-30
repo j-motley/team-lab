@@ -7,7 +7,20 @@ export class TeamLabTemplates implements TeamLabTemplateProvider {
         return `# Team Lab Repository Instructions
 
 This repository uses Team Lab conventions for dbt-oriented development.
-Prefer clear, maintainable SQL and repository-aware changes.
+
+## Chat-First Operating Model
+- Use GitHub Copilot Chat as the primary interaction surface
+- The Orchestrator agent (\`.github/agents/orchestrator.agent.md\`) is the default Team Lab entry point
+- The Prompt Engineer agent refines vague requests into precise implementation tasks
+- Skills under \`.github/skills/\` provide reusable capabilities
+
+## Working Expectations
+- Read \`ai_context/repo_baseline.md\` before performing any task
+- Prefer clear, maintainable SQL and repository-aware changes
+- Follow existing naming and folder conventions
+- Favor simple, working solutions over unnecessary complexity
+- Review scoped instructions under \`.github/instructions/\` for domain-specific guidance
+
 Generated at: ${context.generatedAt}
 `;
 
@@ -316,6 +329,111 @@ Create and refine Team Lab skill definitions.
 - Do not create skills for non-repeatable tasks
 - Keep skill scope focused
 - Follow existing skill structure patterns
+`;
+
+      case 'skill-build-context':
+        return `# Build Context
+
+## Purpose
+Generate or refresh AI context documents for the repository.
+
+## When to Use
+- After significant project structure changes
+- When context documents are missing or stale
+- When onboarding a new project into Team Lab
+
+## Inputs
+- Workspace root path
+- Detected dbt projects from \`ai_context/project_index.json\`
+
+## Outputs
+- Updated \`ai_context/workspace_summary.md\`
+- Updated \`ai_context/project_index.json\`
+- Updated \`ai_context/team_lab_manifest.json\`
+
+## Steps
+1. Scan workspace for dbt projects (\`dbt_project.yml\`)
+2. Read project configurations
+3. Generate workspace summary
+4. Update project index
+5. Update manifest with timestamps
+
+## Constraints
+- Do not overwrite \`repo_baseline.md\`
+- Do not modify seeded agent or instruction files
+- Only update generated files
+`;
+
+      case 'skill-analyze-model':
+        return `# Analyze Model
+
+## Purpose
+Analyze a dbt model to understand its structure, dependencies, and purpose.
+
+## When to Use
+- Before making changes to a model
+- When understanding model grain, joins, or dependencies
+- When reviewing model quality or patterns
+
+## Inputs
+- Path to a dbt model SQL file
+- Repo baseline context from \`ai_context/repo_baseline.md\`
+- Project context from \`ai_context/project_index.json\`
+
+## Outputs
+- Model summary (grain, purpose, key columns)
+- Upstream dependencies (refs, sources)
+- Downstream dependents
+- Observations or potential issues
+
+## Steps
+1. Read the model SQL
+2. Parse refs and sources
+3. Check YAML schema file for column documentation
+4. Summarize structure and intent
+5. Identify patterns and concerns
+
+## Constraints
+- Do not modify any files
+- State assumptions clearly
+- Use existing repo patterns as reference
+`;
+
+      case 'skill-plan-model-update':
+        return `# Plan Model Update
+
+## Purpose
+Create a structured plan for updating a dbt model based on a natural language request.
+
+## When to Use
+- When a developer describes a change they want to make
+- Before executing a model update
+- When coordinating complex model changes
+
+## Inputs
+- Path to the target dbt model
+- Natural language description of the desired change
+- Repo baseline context
+- Model analysis (from Analyze Model skill)
+
+## Outputs
+- Step-by-step implementation plan
+- Affected columns and joins
+- Upstream/downstream impact assessment
+- Assumptions and risks
+
+## Steps
+1. Analyze the current model (invoke Analyze Model)
+2. Parse the user request into specific changes
+3. Identify affected columns, CTEs, and joins
+4. Assess upstream and downstream impact
+5. Produce a structured plan
+
+## Constraints
+- Do not modify any files
+- Clearly separate facts from assumptions
+- Flag any ambiguity in the request
+- Prefer minimal changes that achieve the goal
 `;
 
       default:

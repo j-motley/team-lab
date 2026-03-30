@@ -8,6 +8,8 @@ import { TeamLabTemplates } from './services/teamLabTemplates';
 import { FileSystemTeamLabStructureService } from './services/teamLabStructureService';
 import { validateAgentStructure } from './commands/validateAgentStructure';
 import { scaffoldAgentStructure } from './commands/scaffoldAgentStructure';
+import { updateModel } from './commands/updateModel';
+import { CopilotModelUpdateService } from './services/modelUpdateService';
 
 let registry: FeatureRegistry;
 let statusBar: StatusBarManager;
@@ -23,6 +25,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const teamLabStructure = new FileSystemTeamLabStructureService(teamLabLogger, teamLabTemplates);
 
   const services = buildServiceContainer(context);
+  const modelUpdateService = new CopilotModelUpdateService(services.ai, teamLabLogger);
 
   // Status bar
   statusBar = new StatusBarManager(services.aiProfiles, services.dbtProject);
@@ -42,6 +45,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     ),
     vscode.commands.registerCommand('teamLab.scaffoldAgentStructure', () =>
       scaffoldAgentStructure(teamLabStructure, teamLabLogger)
+    ),
+    vscode.commands.registerCommand('teamLab.updateModel', () =>
+      updateModel(teamLabStructure, modelUpdateService, teamLabLogger)
     ),
     vscode.commands.registerCommand('teamLab.getContext', async () => {
     const workspaceFolders = vscode.workspace.workspaceFolders;

@@ -70,3 +70,20 @@ export interface TeamLabStructureService {
   scaffold(workspaceRoot: string, options?: TeamLabScaffoldOptions): Promise<TeamLabValidationResult>;
   getBaselineStatus(workspaceRoot: string): Promise<TeamLabBaselineStatus>;
 }
+
+export interface ModelUpdateResult {
+  success: boolean;
+  originalSql: string;
+  updatedSql?: string;
+  message: string;
+}
+
+export interface ModelUpdateParams {
+  workspaceRoot: string;
+  modelPath: string;
+  userRequest: string;
+}
+
+export interface ModelUpdateService {
+  updateModel(params: ModelUpdateParams): Promise<ModelUpdateResult>;
+}
