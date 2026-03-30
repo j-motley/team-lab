@@ -2,10 +2,10 @@
   "name": "team-lab",
   "displayName": "team-lab",
   "description": "An operational hub for data teams to come together, work, share, innovate, and rise to the next level.",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "icon": "icon_1.png",
   "engines": {
-    "vscode": "^1.109.3"
+    "vscode": "^1.109.0"
   },
   "categories": [
     "Other"
