@@ -1,0 +1,76 @@
+{
+  "name": "team-lab",
+  "displayName": "team-lab",
+  "description": "An operational hub for data teams to come together, work, share, innovate, and rise to the next level.",
+  "version": "0.0.1",
+  "icon": "icon_1.png",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "teamLab.addAiProfile",
+        "title": "Team Lab: Add AI Profile"
+      },
+      {
+        "command": "teamLab.selectAiProfile",
+        "title": "Team Lab: Select AI Profile"
+      },
+      {
+        "command": "teamLab.generateContextDocuments",
+        "title": "Team Lab: Generate Context Documents"
+      },
+      {
+        "command": "teamLab.generateSemanticModel",
+        "title": "Team Lab: Generate Semantic Model"
+      },
+      {
+        "command": "teamLab.generateContextualSemanticModel",
+        "title": "Team Lab: Generate Contextual Semantic Model"
+      },
+      {
+        "command": "teamLab.getContext",
+        "title": "Team Lab: Get Context"
+      },
+      {
+        "command": "teamLab.validateAgentStructure",
+        "title": "Team Lab: Validate Agent Structure"
+      },
+      {
+        "command": "teamLab.scaffoldAgentStructure",
+        "title": "Team Lab: Scaffold Agent Structure"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.110.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "js-yaml": "^4.1.1"
+  }
+}
