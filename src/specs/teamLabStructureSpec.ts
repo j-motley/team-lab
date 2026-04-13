@@ -56,19 +56,19 @@ export const TEAM_LAB_STRUCTURE_SPEC: TeamLabStructureSpec = {
     },
     { path: '.github/agents', type: 'directory', required: true },
     {
-      path: '.github/agents/orchestrator.agent.md',
+      path: '.github/agents/concierge.agent.md',
       type: 'file',
       required: true,
       ownership: 'seeded',
-      templateId: 'orchestrator-agent',
+      templateId: 'concierge-agent',
       protected: true,
     },
     {
-      path: '.github/agents/prompt-engineer.agent.md',
+      path: '.github/agents/task-designer.agent.md',
       type: 'file',
       required: true,
       ownership: 'seeded',
-      templateId: 'prompt-engineer-agent',
+      templateId: 'task-designer-agent',
       protected: true,
     },
     {

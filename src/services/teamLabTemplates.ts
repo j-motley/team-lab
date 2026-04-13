@@ -10,8 +10,8 @@ This repository uses Team Lab conventions for dbt-oriented development.
 
 ## Chat-First Operating Model
 - Use GitHub Copilot Chat as the primary interaction surface
-- The Orchestrator agent (\`.github/agents/orchestrator.agent.md\`) is the default Team Lab entry point
-- The Prompt Engineer agent refines vague requests into precise implementation tasks
+- The Concierge agent (\`.github/agents/concierge.agent.md\`) is the default Team Lab entry point
+- The Task Designer agent refines vague requests into precise implementation tasks
 - Skills under \`.github/skills/\` provide reusable capabilities
 
 ## Working Expectations
@@ -196,8 +196,8 @@ Examples:
 - Use existing naming patterns before proposing new ones
 `;
 
-      case 'orchestrator-agent':
-        return `# Orchestrator Agent
+      case 'concierge-agent':
+        return `# Concierge Agent
 
 ## Role
 Act as the front door and coordinating agent for Team Lab.
